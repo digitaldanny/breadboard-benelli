@@ -11,6 +11,9 @@
 #include <msp430.h>
 #include "UF_LCD.h"
 
+// button
+void button_init ( void );
+
 // spi
 void spi_init(void);
 void dac_spi_write(char data);

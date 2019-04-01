@@ -7,6 +7,16 @@
 #include "drivers.h"
 #include "game.h"
 
+// ========================================== PORT INTERRUPT FOR BUTTON =======================================================
+void button_init ( void )
+{
+    P1SEL &= (~BIT6); // Set P1.7 SEL as GPIO
+    P1DIR &= (~BIT6); // Set P1.7 SEL as Input
+    P1IES |= (BIT0); // Rising Edge 0 -> 1
+    P1IFG &= (~BIT6); // Clear interrupt flag for P1.7
+    P1IE |= (BIT6); // Enable interrupt for P1.7
+}
+
 // ========================================== ANALOG DIGITAL CONVERSION DRIVERS ===============================================
 void adc_init( void )
 {
