@@ -36,10 +36,12 @@ void photoresInput ( player_t * player )
     // up, down, or stay still.
     short_buf = (short)buf;
 
+    DISABLE_TIMER_INTERRUPT;
     if ( short_buf > PHOTO_MOVE_UP )
         moveUp(&player->body, &player->line, &player->index);
     else if ( short_buf < PHOTO_MOVE_DOWN )
         moveDown(&player->body, &player->line, &player->index);
+    ENABLE_TIMER_INTERRUPT;
 }
 
 // ENEMY AI --------------------------------------------------------
