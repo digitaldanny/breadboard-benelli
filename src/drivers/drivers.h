@@ -13,6 +13,7 @@
 
 // button
 void button_init ( void );
+void led_init    ( void );
 
 // spi
 void spi_init(void);
@@ -28,7 +29,6 @@ void adc_init( void );
 void write( char * string, int length );
 void placeCursor( unsigned char pos );
 void reset_screen();
-void nextLine();
-void prevLine();
+void createLCDChar();
 
 #endif /* DRIVERS_H_ */

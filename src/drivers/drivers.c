@@ -23,6 +23,13 @@ void button_init ( void )
     P1IE |= (BIT6); // Enable interrupt for P1.7
 }
 
+// ========================================== PORT OUTPUT INITIALIZATIONS FOR LEDS =======================================================
+void led_init ( void )
+{
+    P1OUT &= ~(BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
+    P1DIR |= (BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
+}
+
 // ========================================== ANALOG DIGITAL CONVERSION DRIVERS ===============================================
 void adc_init( void )
 {
@@ -127,14 +134,13 @@ void reset_screen()
     lcd_command(CURSOR_RIGHT);  // move cursor over to the right
 }
 
-// next line
-void nextLine()
+// write special character into GRAM memory on LCD
+void createLCDChar()
 {
-
-}
-
-// previous line
-void prevLine()
-{
-
+    // Lcd_Cmd(0x04);   // Set CGRAM Address
+    // Lcd_Cmd(0x00);   // .. set CGRAM Address
+    // for (i = 0; i <= 63 ; i++)
+    //   Lcd_Print_Char(Custom_Char5x8[i]);
+    // Lcd_Cmd(0);      // Return to Home
+    // Lcd_Cmd(2);      // .. return to Home
 }
