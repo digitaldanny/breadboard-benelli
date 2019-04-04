@@ -50,6 +50,41 @@ void updateEnemy ( player_t * enemy )
 
 }
 
+// pass in the number of lives an enemy currently has (with a max of 5)
+// and turn on the correct leds on board to represent the number of lives
+// remaining.
+void enemyLives ( short num_enemy_lives )
+{
+    if ( num_enemy_lives == 5 )
+    {
+        P1OUT |= (BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
+    }
+    else if ( num_enemy_lives == 4 )
+    {
+        P1OUT |= (BIT4 | BIT3 | BIT2 | BIT1);
+        P1OUT &= ~(BIT5);
+    }
+    else if ( num_enemy_lives == 3 )
+    {
+        P1OUT |= (BIT3 | BIT2 | BIT1);
+        P1OUT &= ~(BIT5 | BIT4);
+    }
+    else if ( num_enemy_lives == 2 )
+    {
+        P1OUT |= (BIT2 | BIT1);
+        P1OUT &= ~(BIT5 | BIT4 | BIT3);
+    }
+    else if ( num_enemy_lives == 1 )
+    {
+        P1OUT |= (BIT1);
+        P1OUT &= ~(BIT5 | BIT4 | BIT3 | BIT2);
+    }
+    else
+    {
+        P1OUT &= ~(BIT5 | BIT4 | BIT3 | BIT2 | BIT1);
+    }
+}
+
 // LCD DRIVERS -----------------------------------------------------
 // EXP) moveRight(&b1.body, &b1.line, &b1.index);
 void moveRight ( char* body, line_t* line_num, short* current_index )

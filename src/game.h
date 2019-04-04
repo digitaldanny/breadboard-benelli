@@ -11,6 +11,9 @@
 #include <msp430.h>
 #include "drivers.h"
 #include "UF_LCD.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include "time.h"
 
 // GAME CONFIGURATION MACROS ---------------------
 #define PHOTO_MOVE_UP           500
@@ -23,15 +26,17 @@
 #define TIMER_DEBOUNCE_UPDATE   200
 #define TIMER_INTERRUPT_PERIOD  10000
 
-#define BULLET_MAX_NUM          3
+#define BULLET_MAX_NUM          5
 
 #define PLAYER_HEALTH           5
 
 #define ENEMY_HEALTH            5
+#define ENEMY_MOVEMENT_DIV      5
 
 #define BODY_BULLET             '-'
 #define BODY_PLAYER             '>'
 #define BODY_ENEMY              '<'
+#define OOF                     'X'
 
 // MACROS ----------------------------------------
 #define LINE_1_ST           0
@@ -57,6 +62,13 @@
 
 // TYPEDEFS --------------------------------------
 
+typedef enum dir_decision
+{
+    MOVE_UP,
+    MOVE_DOWN,
+    CHARGE
+} dir_decision_t;
+
 typedef enum line
 {
     LINE1,
@@ -71,6 +83,7 @@ typedef struct player
     short index;
     char body;
     short health;
+    dir_decision_t dir;
 } player_t;
 
 typedef struct bullet
@@ -84,6 +97,7 @@ typedef struct bullet
 // PROTOTYPES -------------------------------------
 void increase_clock_speed ( void );
 void updateEnemy ( player_t * enemy );
+void enemyLives ( short num_enemy_lives );
 void photoresInput ( player_t * player );
 short line2addr ( line_t line_num );
 void moveRight  ( char* body, line_t* line_num, short* current_index );
