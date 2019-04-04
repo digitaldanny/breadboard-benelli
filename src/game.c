@@ -157,6 +157,16 @@ void moveDown ( char* body, line_t* line_num, short* current_index )
     }
 }
 
+void deleteDrawing ( line_t* line_num, short* current_index )
+{
+    short addr = line2addr( *line_num );
+
+    // only erase the old character if it is
+    // on a different line
+    placeCursor(addr + *current_index);
+    lcd_char(' ');
+}
+
 void initDrawing ( char* body, line_t* line_num, short* current_index )
 {
     short addr = line2addr(*line_num);

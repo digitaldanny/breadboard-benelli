@@ -16,11 +16,11 @@
 #define PHOTO_MOVE_UP           500
 #define PHOTO_MOVE_DOWN         300
 
-#define TIMER_PLAYER_UPDATE     20
-#define TIMER_ENEMY_UPDATE      10
-#define TIMER_LED_UPDATE        5
-#define TIMER_DEBOUNCE_UPDATE   20
-#define TIMER_BULLET_UPDATE     1
+#define TIMER_PLAYER_UPDATE     200
+#define TIMER_BULLET_UPDATE     100
+#define TIMER_ENEMY_UPDATE      TIMER_BULLET_UPDATE
+#define TIMER_LED_UPDATE        50
+#define TIMER_DEBOUNCE_UPDATE   200
 #define TIMER_INTERRUPT_PERIOD  10000
 
 #define BULLET_MAX_NUM          3
@@ -34,14 +34,15 @@
 #define BODY_ENEMY              '<'
 
 // MACROS ----------------------------------------
-#define LINE_1_ST       0
-#define LINE_1_END      19
-#define LINE_2_ST       64
-#define LINE_2_END      83
-#define LINE_3_ST       20
-#define LINE_3_END      39
-#define LINE_4_ST       84
-#define LINE_4_END      103
+#define LINE_1_ST           0
+#define LINE_1_END          19
+#define LINE_2_ST           64
+#define LINE_2_END          83
+#define LINE_3_ST           20
+#define LINE_3_END          39
+#define LINE_4_ST           84
+#define LINE_4_END          103
+#define SCREEN_WIDTH        20
 
 #define PHOTO_BUF_SIZE  30
 
@@ -81,6 +82,7 @@ typedef struct bullet
 } bullet_t;
 
 // PROTOTYPES -------------------------------------
+void increase_clock_speed ( void );
 void updateEnemy ( player_t * enemy );
 void photoresInput ( player_t * player );
 short line2addr ( line_t line_num );
@@ -88,6 +90,7 @@ void moveRight  ( char* body, line_t* line_num, short* current_index );
 void moveLeft   ( char* body, line_t* line_num, short* current_index );
 void moveUp     ( char* body, line_t* line_num, short* current_index );
 void moveDown   ( char* body, line_t* line_num, short* current_index );
+void deleteDrawing ( line_t* line_num, short* current_index );
 void initDrawing ( char* body, line_t* line_num, short* current_index );
 
 #endif /* GAME_H_ */
