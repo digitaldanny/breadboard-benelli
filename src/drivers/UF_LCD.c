@@ -25,7 +25,8 @@
 #include "msp430x22x2.h"
 #include "UF_LCD.h"
 
-#define DELAY_TIME 22000/16
+#define CLOCK_FREQ_MHZ 16
+#define DELAY_TIME CLOCK_FREQ_MHZ*22000/16
 
 char uf_lcd_temp;
 char uf_lcd_temp2;

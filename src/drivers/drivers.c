@@ -7,6 +7,12 @@
 #include "drivers.h"
 #include "game.h"
 
+void increase_clock_speed ( void )
+{
+    BCSCTL1 = CALBC1_16MHZ;     // Raise master clock speed to 16 MHz
+    DCOCTL = CALDCO_16MHZ;      // Raise master clock speed to 16 MHz
+}
+
 // ========================================== PORT INTERRUPT FOR BUTTON =======================================================
 void button_init ( void )
 {
