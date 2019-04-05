@@ -19,13 +19,14 @@
 #define PHOTO_MOVE_UP           500
 #define PHOTO_MOVE_DOWN         300
 
-#define TIMER_PLAYER_UPDATE     200
-#define TIMER_BULLET_UPDATE     100
+#define TIMER_PLAYER_UPDATE     2000
+#define TIMER_BULLET_UPDATE     1000
 #define TIMER_ENEMY_UPDATE      TIMER_BULLET_UPDATE
-#define TIMER_LED_UPDATE        50
-#define TIMER_DEBOUNCE_UPDATE   200
-#define TIMER_INTERRUPT_PERIOD  10000
-#define TIMER_SOUND_FX          1
+#define TIMER_LED_UPDATE        500
+#define TIMER_DEBOUNCE_UPDATE   2000
+#define TIMER_INTERRUPT_PERIOD  1000
+#define TIMER_SOUND_FX          10
+#define SOUND_ITERATIONS        2
 
 #define BULLET_MAX_NUM          5
 
@@ -53,7 +54,6 @@
 #define LUT_SIZE            100
 #define GUN                 0
 #define HIT                 1
-#define SOUND_ITERATIONS    10
 
 #define PHOTO_BUF_SIZE  30
 
