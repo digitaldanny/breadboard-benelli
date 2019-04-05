@@ -8,10 +8,7 @@
 /*
  *
  * TODO:
- * ~ Implement sound LUT
  * ~ Implement enemy AI
- * ~ Save 5 output LED pins
- *
  */
 
 #include <msp430.h> 
@@ -27,11 +24,14 @@ int updateEnemyCount;
 int updateButtonDebounceCount;
 int updateBulletCount;
 short enemy_collision;
+short lut_count;
+short play_new_sound;
+short updateSoundEffect;
 
 int shoot_gun;
 int start_debounce_count;
-int wait_for_timer;
 int numberAliveBullets;
+int sound_iterations;
 
 bullet_t bullet_array[BULLET_MAX_NUM];
 
@@ -41,10 +41,13 @@ bullet_t bullet_array[BULLET_MAX_NUM];
 #pragma vector=TIMERA0_VECTOR
 __interrupt void TA0_ISR(void)
 {
-    wait_for_timer = 1; // transmit spi data
     updatePlayerCount++;
     updateEnemyCount++;
     updateBulletCount++;
+
+    // counter to play new sound
+    if (play_new_sound == 1)
+        updateSoundEffect++;
 
     // counter to debounce the button
     if ( start_debounce_count == 1 )
@@ -85,12 +88,15 @@ void main(void)
         updateEnemyCount            = TIMER_ENEMY_UPDATE;
         updateButtonDebounceCount   = TIMER_DEBOUNCE_UPDATE;
         updateBulletCount           = TIMER_BULLET_UPDATE;
+        updateSoundEffect           = 0;
 
         shoot_gun                   = 0;
         start_debounce_count        = 0;
-        wait_for_timer              = 0;
         numberAliveBullets          = 0;
         enemy_collision             = 0;
+        lut_count                   = 0;
+        play_new_sound              = 0;
+        sound_iterations            = 0;
 
         reset_screen(); // clear lcd
 
@@ -120,9 +126,12 @@ void main(void)
         enemy1.line = LINE1;
         enemy1.dir = MOVE_DOWN;
 
+        lut = LUTS[GUN];
+
         // ------------------------------------------------------
 
         srand(time(NULL));
+        dac_spi_write(0x0);
         __bis_SR_register(GIE);         // enable interrupts
 
         // initialize player and enemy ---------------------------
@@ -159,7 +168,11 @@ void main(void)
                         {
                             // determine whether a collision is happening with the enemy.
                             // If it is colliding, set boolean to true.
-                            if ( enemy1.line == tempBullet->line ) enemy_collision = 1;
+                            if ( enemy1.line == tempBullet->line )
+                            {
+                                play_new_sound = playNewSound( HIT );
+                                enemy_collision = 1;
+                            }
 
                             // always delete bullet if it is past the screen
                             // and decrement bullet count so more bullets can
@@ -183,6 +196,8 @@ void main(void)
                 // shoot gun from the player's current position
                 if ( shoot_gun == 1 )
                 {
+                    play_new_sound = playNewSound( GUN );
+
                     // only attempt to activate a bullet if there
                     // are any more bullets available.
                     if ( numberAliveBullets < BULLET_MAX_NUM )
@@ -237,11 +252,8 @@ void main(void)
                 // update number of lives on led display
                 enemyLives( enemy1.health );
 
-                // end the game here ....
-                if ( enemy1.health == 0 )
-                {
-                    break; // end game...
-                }
+                // end the game here .... (add animation later)
+                if ( enemy1.health == 0 ) break; // end game...
 
                 // enemy AI goes here ...
                 else
@@ -283,6 +295,36 @@ void main(void)
                 start_debounce_count = 0;
                 updateButtonDebounceCount = 0;
                 ENABLE_BUTTON_INTERRUPT;
+            }
+
+            // output a sample of the sound effect -----------------------------------
+            if (updateSoundEffect >= TIMER_SOUND_FX && play_new_sound == 1)
+            {
+                __bis_SR_register(GIE);             // disable interrupts
+                dac_spi_write( lut[lut_count] );    // this is slowing down the frequency
+                __bis_SR_register(GIE);             // enable interrupts
+
+                // display next value of the LUT
+                lut_count++;
+
+                // if the sound has played all the way,
+                // turn off the player.
+                if ( lut_count >= LUT_SIZE )
+                {
+                    lut_count = 0;
+                    sound_iterations++;
+
+                    // number of cycles to repeat the
+                    // sound wave
+                    if (sound_iterations >= SOUND_ITERATIONS )
+                    {
+                        play_new_sound = 0;
+                        dac_spi_write(0x0);
+                        sound_iterations = 0;
+                    }
+                }
+
+                updateSoundEffect = 0;
             }
         }
 

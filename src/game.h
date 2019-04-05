@@ -25,6 +25,7 @@
 #define TIMER_LED_UPDATE        50
 #define TIMER_DEBOUNCE_UPDATE   200
 #define TIMER_INTERRUPT_PERIOD  10000
+#define TIMER_SOUND_FX          1
 
 #define BULLET_MAX_NUM          5
 
@@ -49,6 +50,11 @@
 #define LINE_4_END          103
 #define SCREEN_WIDTH        20
 
+#define LUT_SIZE            100
+#define GUN                 0
+#define HIT                 1
+#define SOUND_ITERATIONS    10
+
 #define PHOTO_BUF_SIZE  30
 
 #define DEAD            'd'
@@ -56,9 +62,16 @@
 
 #define ENABLE_BUTTON_INTERRUPT     P1IE |= (BIT6)
 #define DISABLE_BUTTON_INTERRUPT    P1IE &= ~(BIT6)
-#define CLEAR_BUTTON_FLAGS          P1IFG &= ~(BIT6 | BIT7); // P1.7 IFG clear
-#define ENABLE_TIMER_INTERRUPT      TACCTL0 |= CCIE;
-#define DISABLE_TIMER_INTERRUPT     TACCTL0 &= ~CCIE;
+#define CLEAR_BUTTON_FLAGS          P1IFG &= ~(BIT6 | BIT7)  // P1.7 IFG clear
+#define ENABLE_TIMER_INTERRUPT      TACCTL0 |= CCIE
+#define DISABLE_TIMER_INTERRUPT     TACCTL0 &= ~CCIE
+
+// EXTERNS ---------------------------------------
+
+extern char GunShot[LUT_SIZE];
+extern char EnemyHit[LUT_SIZE];
+extern char* LUTS[2];
+extern char* lut;
 
 // TYPEDEFS --------------------------------------
 
@@ -95,6 +108,7 @@ typedef struct bullet
 } bullet_t;
 
 // PROTOTYPES -------------------------------------
+short playNewSound ( short soundId );
 void increase_clock_speed ( void );
 void updateEnemy ( player_t * enemy );
 void enemyLives ( short num_enemy_lives );
