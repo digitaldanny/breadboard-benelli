@@ -73,13 +73,15 @@ void main(void)
     int number_games_played = 1;
 
     // init hardware modules -------------------------------
+    lcd_init();
     increase_clock_speed();
     button_init();
     led_init();
     adc_init();
     spi_init();
     timer_init();
-    lcd_init();
+
+    reset_screen(); // clear lcd
 
     while (1)
     {
