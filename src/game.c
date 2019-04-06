@@ -9,7 +9,7 @@
 
 // SOUND EFFECT LOOKUP TABLE ----------------------------------------
 
-char GunShot[LUT_SIZE] =
+char EnemyHit[LUT_SIZE] =
 {
     0x80,0x88,0x8f,0x97,0x9f,0xa7,0xae,0xb6,
     0xbd,0xc4,0xca,0xd1,0xd7,0xdc,0xe2,0xe7,
@@ -26,7 +26,7 @@ char GunShot[LUT_SIZE] =
     0x60,0x68,0x70,0x77
 };
 
-char EnemyHit[LUT_SIZE] =
+char GunShot[LUT_SIZE] =
 {
     0x5,0xa,0xf,0x14,0x1a,0x1f,0x24,0x29,0x2e,0x33,
     0x38,0x3d,0x42,0x47,0x4d,0x52,0x57,0x5c,0x61,0x66,
@@ -58,16 +58,25 @@ short line2addr ( line_t line_num )
 
 // determines which LUT the sound effect
 // should be playing from.
-short playNewSound ( short soundId )
+void playNewSound ( short soundId, short * play_new_sound )
 {
-
-    switch (soundId)
+    // only allow a new sound to play if
+    // a sound is not already being played
+    // currently.
+    if ( *play_new_sound == 0 )
     {
-    case GUN: lut = LUTS[GUN]; break;
-    case HIT: lut = LUTS[HIT]; break;
-    }
+        switch (soundId)
+        {
+        case GUN: lut = LUTS[GUN]; break;
+        case HIT: lut = LUTS[HIT]; break;
+        }
 
-    return 1;
+        *play_new_sound = 1;
+    }
+    else
+    {
+        *play_new_sound = 0;
+    }
 }
 
 // INPUT SCRIPTS ---------------------------------------------------

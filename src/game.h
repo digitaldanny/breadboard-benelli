@@ -19,14 +19,14 @@
 #define PHOTO_MOVE_UP           500
 #define PHOTO_MOVE_DOWN         300
 
-#define TIMER_PLAYER_UPDATE     2000
-#define TIMER_BULLET_UPDATE     1000
+#define TIMER_PLAYER_UPDATE     20000
+#define TIMER_BULLET_UPDATE     10000
 #define TIMER_ENEMY_UPDATE      TIMER_BULLET_UPDATE
-#define TIMER_LED_UPDATE        500
-#define TIMER_DEBOUNCE_UPDATE   2000
-#define TIMER_INTERRUPT_PERIOD  1000
-#define TIMER_SOUND_FX          10
-#define SOUND_ITERATIONS        2
+#define TIMER_LED_UPDATE        5000
+#define TIMER_DEBOUNCE_UPDATE   20000
+#define TIMER_INTERRUPT_PERIOD  100
+#define TIMER_SOUND_FX          1
+#define SOUND_ITERATIONS        20
 
 #define BULLET_MAX_NUM          5
 
@@ -108,7 +108,7 @@ typedef struct bullet
 } bullet_t;
 
 // PROTOTYPES -------------------------------------
-short playNewSound ( short soundId );
+void playNewSound ( short soundId, short * play_new_sound );
 void increase_clock_speed ( void );
 void updateEnemy ( player_t * enemy );
 void enemyLives ( short num_enemy_lives );

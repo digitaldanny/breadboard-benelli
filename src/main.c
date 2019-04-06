@@ -82,6 +82,7 @@ void main(void)
     timer_init();
 
     reset_screen(); // clear lcd
+    ENABLE_TIMER_INTERRUPT;
 
     while (1)
     {
@@ -134,7 +135,8 @@ void main(void)
 
         srand(time(NULL));
         dac_spi_write(0x0);
-        __bis_SR_register(GIE);         // enable interrupts
+        // __bis_SR_register(GIE);         // enable interrupts
+        __enable_interrupt();
 
         // initialize player and enemy ---------------------------
         DISABLE_TIMER_INTERRUPT;
@@ -172,7 +174,7 @@ void main(void)
                             // If it is colliding, set boolean to true.
                             if ( enemy1.line == tempBullet->line )
                             {
-                                play_new_sound = playNewSound( HIT );
+                                playNewSound( HIT, &play_new_sound );
                                 enemy_collision = 1;
                             }
 
@@ -198,7 +200,7 @@ void main(void)
                 // shoot gun from the player's current position
                 if ( shoot_gun == 1 )
                 {
-                    play_new_sound = playNewSound( GUN );
+                    playNewSound( GUN, &play_new_sound );
 
                     // only attempt to activate a bullet if there
                     // are any more bullets available.
@@ -302,9 +304,9 @@ void main(void)
             // output a sample of the sound effect -----------------------------------
             if (updateSoundEffect >= TIMER_SOUND_FX && play_new_sound == 1)
             {
-                __bis_SR_register(GIE);             // disable interrupts
+                __disable_interrupt();             // disable interrupts
                 dac_spi_write( lut[lut_count] );    // this is slowing down the frequency
-                __bis_SR_register(GIE);             // enable interrupts
+                __enable_interrupt();             // enable interrupts
 
                 // display next value of the LUT
                 lut_count++;
@@ -331,6 +333,8 @@ void main(void)
         }
 
         // GAME WIN PROTOCOL ---------------------
+
+        DISABLE_TIMER_INTERRUPT;
         reset_screen();
         int num_char = 0;
         char tempPtr[3] = {0, 0, 0};
@@ -362,6 +366,7 @@ void main(void)
             for (long long j = 0; j < 100000; j++); // delay to make it pretty
         }
 
+        ENABLE_TIMER_INTERRUPT;
 
         // wait for button input from the user to restart the game
         // from the beginning. After receieving input from user,
@@ -378,6 +383,8 @@ void main(void)
             start_debounce_count = 0;
             ENABLE_BUTTON_INTERRUPT;
         }
+
+        __disable_interrupt();         // disable interrupts
 
         // returns to menu and remembers number of games played
         number_games_played++;
