@@ -101,6 +101,7 @@ void main(void)
         play_new_sound              = 0;
         sound_iterations            = 0;
 
+        P1OUT |= (BIT5 | BIT4 | BIT3 | BIT2 | BIT1); // reset lives to 5
         reset_screen(); // clear lcd
 
         // local variable init ----------------------------------
